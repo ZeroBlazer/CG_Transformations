@@ -6,17 +6,45 @@
 
 static GLfloat spin = 0.0;
 int width = 640,
-    height = 480;
+    height = 480,
+    m_act_x0 = 0,
+    m_act_y0 = 0,
+    m_act_xf = 0,
+    m_act_yf = 0;
+
 Polygon myPol;
 
-// enum Action {
-//     None,
-//     Scale,
-//     Rotate,
-//     Translate
-// }
+enum Action {
+    None,
+    Scale,
+    Rotate,
+    Translate
+};
 
-// Action myAction = None;
+Action myAction(None);
+
+bool actionEnabled() {
+    return myAction != None;
+}
+
+void performAction() {
+    int dMx = m_act_xf - m_act_x0,
+        dMy = m_act_y0 - m_act_yf;
+    switch (myAction)
+    {
+    case Scale:
+        myPol.scale(dMx*1.0/100, dMy*1.0/100);
+        break;
+    case Rotate:
+        break;
+    case Translate:
+        myPol.translate(dMx, dMy);
+        break;
+    default:
+        break;
+    }
+    cout << "dx: " << dMx << "\tdy: " << dMy << endl; 
+}
 
 void init(void) 
 {
@@ -32,34 +60,28 @@ void drawPolygon(void) {
                 pN_y = 0.0;
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glBegin(GL_LINES);
-        auto it_end = myPol.vertices.end();
-        for(auto it = myPol.vertices.begin(); it != it_end; ++it) {
-            p0_x = it->x;
-            p0_y = it->y;
-            pN_x = (it+1)!=it_end?(it+1)->x:myPol.vertices.begin()->x;
-            pN_y = (it+1)!=it_end?(it+1)->y:myPol.vertices.begin()->y;
-            glVertex3f(p0_x*1.0, p0_y*1.0, 0.0f);
-            glVertex3f(pN_x*1.0, pN_y*1.0, 0.0f);
-        }
+            auto it_end = myPol.vertices.end();
+            for(auto it = myPol.vertices.begin(); it != it_end; ++it) {
+                p0_x = it->x;
+                p0_y = it->y;
+                pN_x = (it+1)!=it_end?(it+1)->x:myPol.vertices.begin()->x;
+                pN_y = (it+1)!=it_end?(it+1)->y:myPol.vertices.begin()->y;
+                glVertex3f(p0_x*1.0, p0_y*1.0, 0.0f);
+                glVertex3f(pN_x*1.0, pN_y*1.0, 0.0f);
+            }
         glEnd();
    }
    else {
-       //SHOULD CHANGE THIS CODE
-       float   p0_x = 0.0,
-                p0_y = 0.0,
-                pN_x = 0.0,
-                pN_y = 0.0;
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        glBegin(GL_LINES);
-        auto it_end = myPol.vertices.end();
-        for(auto it = myPol.vertices.begin(); it != it_end; ++it) {
-            p0_x = it->x;
-            p0_y = it->y;
-            pN_x = (it+1)!=it_end?(it+1)->x:myPol.vertices.begin()->x;
-            pN_y = (it+1)!=it_end?(it+1)->y:myPol.vertices.begin()->y;
-            glVertex3f(p0_x*1.0, p0_y*1.0, 0.0f);
-            glVertex3f(pN_x*1.0, pN_y*1.0, 0.0f);
-        }
+        float   p0_x = 0.0,
+                p0_y = 0.0;
+        glColor4f(0.7f, 0.7f, 1.0f, 0.9f);
+        glBegin(GL_POLYGON);
+            auto it_end = myPol.vertices.end();
+            for(auto it = myPol.vertices.begin(); it != it_end; ++it) {
+                p0_x = it->x;
+                p0_y = it->y;
+                glVertex3f(p0_x*1.0, p0_y*1.0, 0.0f);
+            }
         glEnd();
    }
 }
@@ -71,38 +93,6 @@ void display(void)
    glPushMatrix();            
    glRotatef(spin, 0.0, 0.0, 1.0);
    drawPolygon();
-
-    // glBegin(GL_TRIANGLES);
-	// 	//Send the vertices and colors for the triangle
-	// 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	// 	glVertex3f(2.0f, 2.5f, -1.0f);
-	// 	glVertex3f(-3.5f, -2.5f, -1.0f);
-	// 	glVertex3f(2.0f, -4.0f, -1.0f);
-	// glEnd();
-
-    // glBegin(GL_TRIANGLES);
-    //     glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-    //     glVertex3f(-3.5f, 2.5f, -1.0f);
-    //     glVertex3f(0.0f, -4.5f, -1.0f);
-    //     glVertex3f(3.5f, -1.0f, -1.0f);
-    // glEnd();
-
-    // Draw traingle fan
-    // glBegin(GL_TRIANGLE_FAN);
-	// 	//Send the vertices and colors for the pentagon
-	// 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	// 	glVertex3f(-1.0f, 2.0f, 0.0f);
-	// 	glVertex3f(-3.0f, -0.5f, 0.0f);
-	// 	glVertex3f(-1.5f, -3.0f, 0.0f);
-	// 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	// 	glVertex3f(1.0f, -2.0f, 0.0f);
-	// 	glColor4f(0.1f, 0.9f, 0.3f, 1.0f);
-	// 	glVertex3f(1.0f, 3.0f, 0.0f);
-	// 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	// 	glVertex3f(-0.5f, 4.0f, 0.0f);
-	// 	glColor4f(0.6f, 0.2f, 0.8f, 1.0f);
-	// 	glVertex3f(-3.0f, -0.5f, 0.0f);
-	// glEnd();
 
    glPopMatrix();
    glutSwapBuffers();
@@ -133,9 +123,20 @@ void mouse(int button, int state, int x, int y)
     switch (button) {
         case GLUT_LEFT_BUTTON:
             if (state == GLUT_DOWN) {
-                if(!myPol.isClosed())
+                if(!myPol.isClosed()) {
                     myPol.addVertex(x - width/2, height/2 - y);
-                glutPostRedisplay();
+                    break;
+                }
+                if(actionEnabled()) {
+                    m_act_x0 = x;
+                    m_act_y0 = y;
+                    break;
+                }
+            }
+            if(state == GLUT_UP && actionEnabled()) {
+                m_act_xf = x;
+                m_act_yf = y;
+                performAction();
             }
             //  glutIdleFunc(spinDisplay);
             break;
@@ -151,6 +152,7 @@ void mouse(int button, int state, int x, int y)
       default:
          break;
    }
+   glutPostRedisplay();
 }
 
 /* 
@@ -166,8 +168,7 @@ void keyboard(unsigned char key, int x, int y)
         case 'E':
             if(myPol.isClosed()) {
                 cout << "scaling!" << endl;
-                myPol.scale(1.5, 0.5);
-                // myAction = Scale;
+                myAction = Scale;
             }
             else
                 cout << "Close the polygon by right-clicking the screen" << endl;
@@ -177,7 +178,7 @@ void keyboard(unsigned char key, int x, int y)
             if(myPol.isClosed()) {
                 cout << "rotating!" << endl;
                 myPol.rotate(1.5);
-                // myAction = Rotate;
+                myAction = Rotate;
             }
             else
                 cout << "Close the polygon by right-clicking the screen" << endl;
@@ -186,8 +187,7 @@ void keyboard(unsigned char key, int x, int y)
         case 'T':
             if(myPol.isClosed()) {
                 cout << "translating!" << endl;
-                myPol.translate(5.0, -5.0);
-                // myAction = Translate;
+                myAction = Translate;
             }
             else
                 cout << "Close the polygon by right-clicking the screen" << endl;
@@ -195,7 +195,7 @@ void keyboard(unsigned char key, int x, int y)
         case 'w':
         case 'W':
             if(myPol.isClosed()) {
-                //myAction = None;
+                myAction = None;
             }
             else
                 cout << "Close the polygon by right-clicking the screen" << endl;
@@ -220,5 +220,6 @@ int main(int argc, char** argv)
    glutMouseFunc(mouse);
    glutKeyboardFunc(keyboard);
    glutMainLoop();
+
    return 0;
 }
