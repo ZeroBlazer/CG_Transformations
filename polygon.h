@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <vector>
-#include<math.h>
+#include <math.h>
+#include "matrix.h"
 
 using namespace std;
 
