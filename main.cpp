@@ -30,12 +30,14 @@ bool actionEnabled() {
 void performAction() {
     int dMx = m_act_xf - m_act_x0,
         dMy = m_act_y0 - m_act_yf;
+    cout << "Action -> dx: " << dMx << "\tdy: " << dMy << endl;
     switch (myAction)
     {
     case Scale:
-        myPol.scale(dMx*1.0/100, dMy*1.0/100);
+        myPol.scale(1+dMx*2.0/width, 1+dMy*-2.0/height);
         break;
     case Rotate:
+        myPol.rotate(asin((dMy*width)/(dMx*height)));
         break;
     case Translate:
         myPol.translate(dMx, dMy);
@@ -43,7 +45,7 @@ void performAction() {
     default:
         break;
     }
-    cout << "dx: " << dMx << "\tdy: " << dMy << endl; 
+     
 }
 
 void init(void) 
@@ -177,7 +179,6 @@ void keyboard(unsigned char key, int x, int y)
         case 'R':
             if(myPol.isClosed()) {
                 cout << "rotating!" << endl;
-                myPol.rotate(1.5);
                 myAction = Rotate;
             }
             else

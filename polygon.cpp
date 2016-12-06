@@ -16,8 +16,10 @@ void Vertex::scale(float sx, float sy) {
 }
 
 void Vertex::rotate(float theta) {
+    cout << "x: " << x << "\ty: " << y << endl;
     x = x*cos(theta) - y*sin(theta);
     y = x*sin(theta) + y*cos(theta);
+    cout << "x: " << x << "\ty: " << y << "\t Cos_O: " << cos(theta) << ", Sin_O: " << sin(theta) << endl;
 }
 
 Polygon::Polygon() 
@@ -54,6 +56,7 @@ void Polygon::scale(float sx, float sy) {
 }
 
 void Polygon::rotate(float theta) {
+    cout << "Rotate " << theta << " degrees" << endl;
     for(auto it = vertices.begin(); it != vertices.end(); ++it) {
         it->rotate(theta);
     }

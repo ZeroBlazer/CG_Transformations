@@ -4,13 +4,15 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include "matrix.h"
+//#include "matrix.h"
 
 using namespace std;
 
 struct Vertex {
     int     x,
             y;
+
+    // Matrix<float> z;
 
     Vertex(int x, int y);
 
