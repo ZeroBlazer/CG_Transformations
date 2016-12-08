@@ -37,7 +37,8 @@ void performAction() {
         myPol.scale(1+dMx*2.0/width, 1+dMy*-2.0/height);
         break;
     case Rotate:
-        myPol.rotate(asin((dMy*width)/(dMx*height)));
+        //myPol.rotate(asin((dMy*width)/(dMx*height)));
+        myPol.rotate(0.16);
         break;
     case Translate:
         myPol.translate(dMx, dMy);
